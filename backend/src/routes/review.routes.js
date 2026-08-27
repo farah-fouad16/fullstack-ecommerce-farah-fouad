@@ -2,10 +2,9 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 
-// Paste your copied Vercel URL here
-const REVIEW_SERVICE_URL = process.env.REVIEW_SERVICE_URL || 'https://fullstack-ecommerce-farah-fouad-review-service.vercel.app';
+// Your live microservice link
+const REVIEW_SERVICE_URL = process.env.REVIEW_SERVICE_URL || 'https://fullstack-ecommerce-farah-fouad-review-service-cg5raessc.vercel.app';
 
-// Forward review requests to the standalone microservice
 router.get('/:productId', async (req, res) => {
   try {
     const response = await axios.get(`${REVIEW_SERVICE_URL}/api/reviews/${req.params.productId}`);
