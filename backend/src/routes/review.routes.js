@@ -1,23 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const Review = require('../models/Review');
-const { authenticateToken } = require('../middleware/auth');
+const axios = require('axios');
 
+// Paste your copied Vercel URL here
+const REVIEW_SERVICE_URL = process.env.REVIEW_SERVICE_URL || 'https://fullstack-ecommerce-farah-fouad-review-service.vercel.app';
+
+// Forward review requests to the standalone microservice
 router.get('/:productId', async (req, res) => {
-  const reviews = await Review.find({ productId: req.params.productId });
-  res.json(reviews);
-});
-
-router.post('/', authenticateToken, async (req, res) => {
-  const { productId, rating, comment } = req.body;
-  const review = new Review({
-    productId,
-    userName: req.user.email,
-    rating,
-    comment
-  });
-  await review.save();
-  res.status(201).json(review);
+  try {
+    const response = await axios.get(`${REVIEW_SERVICE_URL}/api/reviews/${req.params.productId}`);
+    res.status(200).json(response.data);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch reviews from service' });
+  }
 });
 
 module.exports = router;
